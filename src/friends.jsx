@@ -1,8 +1,10 @@
 import React from 'react';
 import axios from 'axios';
 import Style from './App.scss';
-
-const TOKEN = '183dd133a637a61fc15d4cc034dd76ba3f261984';
+//old
+// const TOKEN = '183dd133a637a61fc15d4cc034dd76ba3f261984';
+//new
+const TOKEN = 'cd3d32bb8f785dbd01f321731a944af3b2e11fa4';
 
 const axiosGitHubGraphQL = axios.create({
   baseURL: 'https://api.github.com/graphql',
@@ -13,7 +15,7 @@ const axiosGitHubGraphQL = axios.create({
   }
 });
 
-const GET_ORGANIZATION = `
+const searchFriends = `
   query SearchTop100Users($searchString: String!) {
     search(query: $searchString, type: USER, first: 100) {
       nodes {
@@ -39,7 +41,7 @@ class Friends extends React.Component {
 
   onFetchFromGitHub() {
     axiosGitHubGraphQL.post('', {
-      query: GET_ORGANIZATION,
+      query: searchFriends,
       variables:{
         searchString: this.props.username
       }
