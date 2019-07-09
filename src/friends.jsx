@@ -1,18 +1,13 @@
 import React from 'react';
 import axios from 'axios';
 import Style from './App.scss';
-//oldold
-// const TOKEN = '183dd133a637a61fc15d4cc034dd76ba3f261984';
-//old
-//const TOKEN = 'cd3d32bb8f785dbd01f321731a944af3b2e11fa4';
-//new
-const TOKEN = 'he4f3031dec5bd115730da8b29d72f1f18e527081h';
+import TOKEN from './token';
 
 const axiosGitHubGraphQL = axios.create({
   baseURL: 'https://api.github.com/graphql',
   headers: {
     Authorization: `bearer ${
-      TOKEN.substring(1, 41)
+      TOKEN
     }`
   }
 });
