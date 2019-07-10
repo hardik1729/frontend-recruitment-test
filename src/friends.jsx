@@ -35,7 +35,12 @@ const searchFriends = `
 const commitHistory = `
   query friendsCommitHistory($Author: CommitAuthor){
     history(author: $Author, first: 5){
-
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
+      }
     }
   }
 `;
@@ -97,8 +102,7 @@ class Friends extends React.Component {
     }).then(result =>
       this.setState({
         commits: result.data.errors, //.history.nodes,
-        olduser: this.state.username,
-        id: ''
+        searchCommit: false
       })
     );
   }
@@ -180,9 +184,9 @@ class Friends extends React.Component {
         id: event.currentTarget.dataset.id,
         showCommit: true,
         pageInfo: initialPageInfo,
-        first:100, 
-        last:null, 
-        search:false, 
+        first:100,
+        last:null,
+        search:false,
         commits:[]
       });
     }
