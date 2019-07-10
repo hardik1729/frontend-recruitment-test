@@ -51,6 +51,7 @@ class Friends extends React.Component {
       matchedUsers: [],
       id:'',
       showCommit: false,
+      searchCommit:false,
       commit:[],
       pageInfo: initialPageInfo,
       first: 100,
@@ -106,10 +107,9 @@ class Friends extends React.Component {
     if (this.state.search) {
       this.onFetchFromGitHub();
     }
-    if (this.state.id !== '') {
+    if (this.state.id !== '' || this.state.searchCommit) {
       this.onFetchFromGitHubCommit();
     }
-
   }
 
   onChange(event) {
@@ -147,7 +147,14 @@ class Friends extends React.Component {
           last:null,
           search: this.state.pageInfo.hasNextPage
         });
+        if (this.state.showCommit) {
+          this.setState({
+            searchCommit:true,
+            search:false
+          });
+        }
       }
+
     } else if (event.currentTarget.dataset.id === 'prev') {
       if (this.state.pageInfo.hasPreviousPage) {
         this.setState({
@@ -161,6 +168,12 @@ class Friends extends React.Component {
           last:100,
           search: this.state.pageInfo.hasPreviousPage
         });
+        if (this.state.showCommit) {
+          this.setState({
+            searchCommit:true,
+            search:false
+          });
+        }
       }
     } else {
       this.setState({
