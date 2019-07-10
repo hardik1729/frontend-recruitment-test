@@ -25,7 +25,6 @@ const searchFriends = `
         ... on User{
           login
           avatarUrl
-          id
         }
       }
     }
@@ -33,13 +32,22 @@ const searchFriends = `
 `;
 
 const commitHistory = `
-  query friendsCommitHistory($Author: CommitAuthor){
-    history(author: $Author, first: 5){
-      pageInfo {
-        endCursor
-        hasNextPage
-        hasPreviousPage
-        startCursor
+  query friendsCommitHistory($login: String!, $first: Int, $last: Int, $afterCursor: String, $beforeCursor: String){
+    user(login: $login){
+      login
+      avatarUrl
+      commitComments(first: $first, last: $last, after: $afterCursor, before: $beforeCursor){
+        pageInfo {
+          endCursor
+          hasNextPage
+          hasPreviousPage
+          startCursor
+        }
+        nodes{
+          commit{
+            message
+          }
+        }
       }
     }
   }
@@ -60,7 +68,8 @@ class Friends extends React.Component {
       commits:[],
       pageInfo: initialPageInfo,
       first: 100,
-      last: null
+      last: null,
+      avatarUrl:''
     };
     this.onFetchFromGitHub = this.onFetchFromGitHub.bind(this);
     this.onFetchFromGitHubCommit = this.onFetchFromGitHubCommit.bind(this);
@@ -97,12 +106,18 @@ class Friends extends React.Component {
     axiosGitHubGraphQL.post('', {
       query: commitHistory,
       variables:{
-        Author: {id : this.state.id}
+        login: this.state.id,
+        afterCursor: this.state.pageInfo.endCursor,
+        beforeCursor: this.state.pageInfo.startCursor,
+        first: this.state.first,
+        last: this.state.last
       }
     }).then(result =>
       this.setState({
-        commits: result.data.errors, //.history.nodes,
-        searchCommit: false
+        commits: result.data.data.user.commitComments.nodes, //.history.nodes,
+        searchCommit: false,
+        pageInfo: result.data.data.user.commitComments.pageInfo,
+        avatarUrl:result.data.data.user.avatarUrl
       })
     );
   }
@@ -132,7 +147,8 @@ class Friends extends React.Component {
       matchedUsers: [],
       id:'',
       showCommit: false,
-      commits:[]
+      commits:[],
+      avatarUrl:''
     });
     event.preventDefault();
   }
@@ -154,7 +170,8 @@ class Friends extends React.Component {
         if (this.state.showCommit) {
           this.setState({
             searchCommit:true,
-            search:false
+            search:false,
+            first:5
           });
         }
       }
@@ -175,7 +192,8 @@ class Friends extends React.Component {
         if (this.state.showCommit) {
           this.setState({
             searchCommit:true,
-            search:false
+            search:false,
+            last:5
           });
         }
       }
@@ -185,7 +203,7 @@ class Friends extends React.Component {
         showCommit: true,
         searchCommit:true,
         pageInfo: initialPageInfo,
-        first:100,
+        first:5,
         last:null,
         search:false,
         commits:[]
@@ -196,19 +214,21 @@ class Friends extends React.Component {
     if (!this.state.showCommit) {
       return (this.state.matchedUsers.map(user => {
         return (
-          <li data-id={user.id} onClick={this.onClick}>
+          <li data-id={user.login} onClick={this.onClick}>
             <img src={user.avatarUrl} height="30" width="30"/> {user.login}
           </li>
         );
       }));
     }
-    return (this.state.commits.map(commit => {
-      return (
-        <li>
-          {commit.message}
-        </li>
-      );
-    }));
+    return (
+      this.state.commits.map(commit => {
+        return (
+          <li>
+            {commit.commit.message}
+          </li>
+        );
+      })
+    );
   }
   render() {
 
