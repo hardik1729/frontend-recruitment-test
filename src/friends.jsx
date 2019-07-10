@@ -52,7 +52,7 @@ class Friends extends React.Component {
       id:'',
       showCommit: false,
       searchCommit:false,
-      commit:[],
+      commits:[],
       pageInfo: initialPageInfo,
       first: 100,
       last: null
@@ -82,7 +82,7 @@ class Friends extends React.Component {
         matchedUsers: filteredData,
         showCommit: false,
         search:false,
-        commit:[],
+        commits:[],
         pageInfo: result.data.data.search.pageInfo
       });
     });
@@ -96,7 +96,7 @@ class Friends extends React.Component {
       }
     }).then(result =>
       this.setState({
-        commit: result.data.errors, //.history.nodes,
+        commits: result.data.errors, //.history.nodes,
         olduser: this.state.username,
         id: ''
       })
@@ -128,7 +128,7 @@ class Friends extends React.Component {
       matchedUsers: [],
       id:'',
       showCommit: false,
-      commit:[]
+      commits:[]
     });
     event.preventDefault();
   }
@@ -179,7 +179,11 @@ class Friends extends React.Component {
       this.setState({
         id: event.currentTarget.dataset.id,
         showCommit: true,
-        pageInfo: initialPageInfo, first:100, last:null, search:false, commit:[]
+        pageInfo: initialPageInfo,
+        first:100, 
+        last:null, 
+        search:false, 
+        commits:[]
       });
     }
   }
@@ -193,10 +197,10 @@ class Friends extends React.Component {
         );
       }));
     }
-    return (this.state.commit.map(error => {
+    return (this.state.commits.map(commit => {
       return (
         <li>
-          {error.message}
+          {commit.message}
         </li>
       );
     }));
