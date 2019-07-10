@@ -111,7 +111,7 @@ class Friends extends React.Component {
     if (this.state.search) {
       this.onFetchFromGitHub();
     }
-    if (this.state.id !== '' || this.state.searchCommit) {
+    if (this.state.searchCommit) {
       this.onFetchFromGitHubCommit();
     }
   }
@@ -183,6 +183,7 @@ class Friends extends React.Component {
       this.setState({
         id: event.currentTarget.dataset.id,
         showCommit: true,
+        searchCommit:true,
         pageInfo: initialPageInfo,
         first:100,
         last:null,
