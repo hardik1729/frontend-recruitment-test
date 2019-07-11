@@ -259,8 +259,9 @@ class Friends extends React.Component {
           <button type="submit">Search</button>
         </form>
         <hr/>
-        <div data-id="next" onClick={this.onClick}>next</div>
-        <div data-id="prev" onClick={this.onClick}>prev</div>
+        <text data-id="prev" onClick={this.onClick}>prev</text>
+        <text> | </text>
+        <text dx="100%" data-id="next" onClick={this.onClick}>next</text>
         <hr/>
         {
           this.selecteduser()
