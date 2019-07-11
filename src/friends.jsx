@@ -77,6 +77,7 @@ class Friends extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     this.list = this.list.bind(this);
+
   }
 
   onFetchFromGitHub() {
@@ -210,6 +211,20 @@ class Friends extends React.Component {
       });
     }
   }
+  selecteduser() {
+    if (this.state.showCommit) {
+      return (
+        <div>
+          <img src={this.state.avatarUrl} height="150" width="150"/>
+          <br/>
+          {this.state.id}
+          <hr/>
+        </div>
+      );
+    }
+    return <div/>;
+  }
+
   list() {
     if (!this.state.showCommit) {
       return (this.state.matchedUsers.map(user => {
@@ -220,19 +235,15 @@ class Friends extends React.Component {
         );
       }));
     }
-    return (
-      this.state.commits.map(commit => {
-        return (
-          <li>
-            {commit.commit.message}
-          </li>
-        );
-      })
-
-    );
+    return (this.state.commits.map(commit => {
+      return (
+        <li>
+          {commit.commit.message}
+        </li>
+      );
+    }));
   }
   render() {
-
     return (
       <div className={Style.something}>
         <h1>Friends</h1>
@@ -250,6 +261,10 @@ class Friends extends React.Component {
         <hr/>
         <div data-id="next" onClick={this.onClick}>next</div>
         <div data-id="prev" onClick={this.onClick}>prev</div>
+        <hr/>
+        {
+          this.selecteduser()
+        }
         {
           this.list()
         }
