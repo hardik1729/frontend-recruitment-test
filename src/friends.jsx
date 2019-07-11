@@ -114,7 +114,7 @@ class Friends extends React.Component {
       }
     }).then(result =>
       this.setState({
-        commits: result.data.data.user.commitComments.nodes, //.history.nodes,
+        commits: result.data.data.user.commitComments.nodes.filter(commit=>commit.commit),
         searchCommit: false,
         pageInfo: result.data.data.user.commitComments.pageInfo,
         avatarUrl:result.data.data.user.avatarUrl
@@ -228,6 +228,7 @@ class Friends extends React.Component {
           </li>
         );
       })
+
     );
   }
   render() {
